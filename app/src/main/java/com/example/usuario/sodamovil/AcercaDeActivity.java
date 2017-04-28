@@ -37,6 +37,7 @@ public class AcercaDeActivity extends AppCompatActivity {
                 "Daniel Montealegre Vindas 116300970",
                 "Jose Pablo Obando Rosales 116340814",
                 "Josué David Aguilar Ulate 402300598",
+				"AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH",
 
         };
 
