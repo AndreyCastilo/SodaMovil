@@ -11,8 +11,8 @@ import com.example.usuario.sodamovil.Entidades.Comida;
 import com.example.usuario.sodamovil.R;
 
 
-public class AdaptadorMenu extends RecyclerView.Adapter<AdaptadorMenu.MenuViewHolder>{
-
+public class AdaptadorMenu {
+/*
     public static class MenuViewHolder extends RecyclerView.ViewHolder {
         // Campos respectivos de un item
         public TextView nombre;
@@ -40,6 +40,7 @@ public class AdaptadorMenu extends RecyclerView.Adapter<AdaptadorMenu.MenuViewHo
     public MenuViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_lista_menu, viewGroup, false);
+
         return new MenuViewHolder(v);
     }
 
@@ -52,9 +53,9 @@ public class AdaptadorMenu extends RecyclerView.Adapter<AdaptadorMenu.MenuViewHo
                 .centerCrop()
                 .into(viewHolder.imagen);
         viewHolder.nombre.setText(item.getNombre());
-        viewHolder.precio.setText("$" + item.getPrecio());
+        viewHolder.precio.setText("₡" + item.getPrecio());
 
     }
 
-
+*/
 }

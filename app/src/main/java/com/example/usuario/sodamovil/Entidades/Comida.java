@@ -10,24 +10,52 @@ import java.util.List;
  */
 
 public class Comida {
-    private float precio;
+    private String idDrawable;
+    private String idFirebase;
+    private String idRestaurante;
     private String nombre;
-    private int idDrawable;
+    private float precio;
+    public Comida(){
 
-    public Comida(float precio, String nombre, int idDrawable) {
-        this.precio = precio;
-        this.nombre = nombre;
-        this.idDrawable = idDrawable;
     }
 
-    public static final List<Comida> COMIDAS_POPULARES = new ArrayList<Comida>();
+    public Comida(String idDrawable, String idFirebase, String idRestaurante, String nombre, float precio) {
+        this.idDrawable = idDrawable;
+        this.idFirebase = idFirebase;
+        this.idRestaurante = idRestaurante;
+        this.nombre = nombre;
+        this.precio = precio;
+    }
 
 
-    static {
-        COMIDAS_POPULARES.add(new Comida(5, "Camarones Tismados", R.drawable.camaron));
-        COMIDAS_POPULARES.add(new Comida(3.2f, "Rosca Herbárea", R.drawable.rosca));
-        COMIDAS_POPULARES.add(new Comida(12f, "Sushi Extremo", R.drawable.sushi));
-        COMIDAS_POPULARES.add(new Comida(9, "Sandwich Deli", R.drawable.sand));
+
+
+    public String getIdFirebase() {
+        return idFirebase;
+    }
+
+    public void setIdFirebase(String idFirebase) {
+        this.idFirebase = idFirebase;
+    }
+
+    public String getIdRestaurante() {
+        return idRestaurante;
+    }
+
+    public void setIdRestaurante(String idRestaurante) {
+        this.idRestaurante = idRestaurante;
+    }
+
+    public void setPrecio(float precio) {
+        this.precio = precio;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setIdDrawable(String idDrawable) {
+        this.idDrawable = idDrawable;
     }
 
     public float getPrecio() {
@@ -38,7 +66,7 @@ public class Comida {
         return nombre;
     }
 
-    public int getIdDrawable() {
+    public String getIdDrawable() {
         return idDrawable;
     }
 

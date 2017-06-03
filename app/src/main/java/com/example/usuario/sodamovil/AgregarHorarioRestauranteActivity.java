@@ -42,12 +42,14 @@ public class AgregarHorarioRestauranteActivity extends AppCompatActivity {
     private Hora horaAbrir;
     private Hora horaCerrar;
     private Horario horario;
+    private VariablesGlobales vg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_horario_restaurante);
         // alambramos el TextView
+        vg =  VariablesGlobales.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAgregarHorarioRestaurante);
         toolbar.setTitle("Horario");
@@ -63,7 +65,9 @@ public class AgregarHorarioRestauranteActivity extends AppCompatActivity {
         horaAbrir = new Hora(12,0);
         horaCerrar = new Hora(20,0);
         horario= new Horario();
-
+        if(vg.restauranteAgregar.getHorario()!=null){
+            horario = vg.restauranteAgregar.getHorario();
+        }
         tvHoraAbrir= (TextView) findViewById(R.id.tvHoraAbrir);
 
         //Programamos el evento onclick
@@ -306,14 +310,14 @@ public class AgregarHorarioRestauranteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home
-                Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, AgregarRestauranteActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
             case R.id.action_add_hours:
-                Intent output = new Intent();
-                setResult(RESULT_OK, output);
-                finish();
+                vg.restauranteAgregar.setHorario(horario);
+                Intent intento = new Intent(this, AgregarResturanteUbicacion.class);
+                startActivity(intento);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

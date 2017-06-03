@@ -20,6 +20,10 @@
                 android:id="@+id/menuItemAcercaDe"
                 android:icon="@drawable/ic_info_black_24dp"
                 android:title="Acerca de" />
+            <item
+                android:id="@+id/menuItemDemo"
+                android:icon="@drawable/ic_play_circle_filled_black_24dp"
+                android:title="Demo" />
         </menu>
     </item>
 

@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -43,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.example.usuario.sodamovil.Entidades.DataHelper.inicializarRestaurantes;
 
 /**
  * A login screen that offers login via email/password.
@@ -136,6 +139,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         progressDialog = new ProgressDialog(this);
         firebaseAuth = FirebaseAuth.getInstance();
 
+        verificarSesion();
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -163,6 +168,51 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         };
 
     }
+
+    private void verificarSesion(){
+
+        progressDialog.setMessage("Loading Please Wait...");
+        progressDialog.show();
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if( user != null ){
+            inicializarRestaurantes();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
+        else{
+            progressDialog.cancel();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Desea salir de la aplicación?");
+        alertDialogBuilder
+                //.setMessage("Click 'SI' para salir!")
+                .setCancelable(false)
+                .setPositiveButton("Salir",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(Intent.ACTION_MAIN);
+                                intent.addCategory(Intent.CATEGORY_HOME);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        })
+
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     private void userLogin(String email,String password) {
         //checking if email and passwords are empty
         if (TextUtils.isEmpty(email)) {
@@ -187,8 +237,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         if (task.isSuccessful()) {
                             //start the profile activity
                             finish();
+                            inicializarRestaurantes();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
+
                             Toast.makeText(LoginActivity.this, "Error!!!", Toast.LENGTH_LONG).show();
                         }
                     }

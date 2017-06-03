@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_agregar_restaurante"
@@ -11,22 +12,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.usuario.sodamovil.AgregarRestauranteActivity">
 
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+
+
+
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/nombreReId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre"
-                android:id="@+id/nombreReId" />
+                android:hint="Nombre" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -34,12 +42,12 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/descripReId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:ems="10"
                 android:hint="Descripción"
-                android:id="@+id/descripReId" />
+                android:inputType="textMultiLine" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -47,54 +55,75 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/etTelf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
+                android:ems="10"
+                android:hint="Teléfono"
+                android:inputType="textMultiLine" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etHorario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Horario"
-                android:id="@+id/etHorario" />
+                android:inputType="textMultiLine" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:text="Agregar Horario"
+            android:id="@+id/irAhorarioAgregar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/irAhorarioAgregar"
             android:drawableRight="@drawable/ic_alarm_black_24dp"
-            android:gravity="center|center_vertical" />
+            android:gravity="center|center_vertical"
+            android:text="Agregar Horario" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/etUbicacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:ems="10"
                 android:hint="Ubicación"
-                android:id="@+id/etUbicacion" />
+                android:inputType="textMultiLine" />
         </android.support.design.widget.TextInputLayout>
-        <Button
-            android:text="Agregar Ubicación"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/irAMapaRestaurante"
-            android:drawableRight="@drawable/ic_add_location_black_24dp"
-            android:gravity="center|center_vertical" />
+
 
         <Button
-            android:text="Agregar Restaurante"
+            android:id="@+id/irAMapaRestaurante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_add_location_black_24dp"
+            android:gravity="center|center_vertical"
+            android:text="Agregar Ubicación" />
+
+        <ImageView
+            android:id="@+id/imagenViewRestaurante"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            app:srcCompat="@drawable/ic_no_image_available"
+            android:layout_weight="2.33" />
+
+        <Button
+            android:id="@+id/btnAgregarRestaurante"
             style="@android:style/TextAppearance.Material.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnAgregarRestaurante"
+            android:layout_marginTop="15dp"
             android:background="@color/colorPrimary"
-            android:textColor="@android:color/background_light"
-            android:layout_marginTop="15dp"/>
-
-
-
+            android:text="Agregar Restaurante"
+            android:textColor="@android:color/background_light" />
 
     </LinearLayout>
-</RelativeLayout>
+
+
+</ScrollView>

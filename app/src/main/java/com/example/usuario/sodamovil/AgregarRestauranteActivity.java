@@ -1,12 +1,19 @@
 package com.example.usuario.sodamovil;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.usuario.sodamovil.BaseDeDatos.DataBase;
@@ -23,6 +30,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import retrofit2.http.HEAD;
 
 public class AgregarRestauranteActivity extends AppCompatActivity {
 
@@ -30,9 +44,15 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
     EditText descripcion_restaurante;
     EditText horario_restaurante;
     EditText ubicacion_restaurante;
+    ProgressDialog progressDialog;
+    Bitmap imagenRestaurante;
+    ImageView imagenRestauranteButton;
+    EditText telefono_restaurante;
+
     static int  HORARIO_REQUEST = 1;
     static int  UBICACION_REQUEST = 1;
     static int PLACE_PICKER_REQUEST = 3;
+    static int RESULT_LOAD_IMG=4;
 
 
     @Override
@@ -41,11 +61,14 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_agregar_restaurante);
 
         // alambramos el boton
-
+        progressDialog = new ProgressDialog(this);
         Button MiBoton = (Button) findViewById(R.id.irAMapaRestaurante);
 
         Button MiBoton2 = (Button) findViewById(R.id.irAhorarioAgregar);
         Button AgregarRestaurante = (Button) findViewById(R.id.btnAgregarRestaurante);
+
+        imagenRestauranteButton= (ImageView) findViewById(R.id.imagenViewRestaurante);
+
 
 
         nombre_restaurante = (EditText) findViewById(R.id.nombreReId);
@@ -54,6 +77,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
         horario_restaurante = (EditText) findViewById(R.id.etHorario);
         horario_restaurante.setEnabled(false);
         ubicacion_restaurante.setFocusable(false);
+        telefono_restaurante=(EditText) findViewById(R.id.etTelf);
         //Programamos el evento onclick
         MiBoton.setOnClickListener(new View.OnClickListener(){
 
@@ -87,6 +111,17 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
 
         });
 
+        imagenRestauranteButton.setOnClickListener(new View.OnClickListener(){
+
+
+            @Override
+
+            public void onClick(View arg0) {
+                getImageFromGallery();
+            }
+
+
+        });
 
 
         AgregarRestaurante.setOnClickListener(new View.OnClickListener(){
@@ -109,10 +144,10 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // app icon in action bar clicked; go home
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                limpiaForm();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -125,6 +160,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
             if(resultCode==RESULT_OK){
                 Place place = PlacePicker.getPlace(this,data);
                 String address = ""+place.getAddress();
+                VariablesGlobales.getInstance().setPosicionAgregarRestaurante(place.getLatLng());
                 ubicacion_restaurante.setText(address);
             }
         }
@@ -133,20 +169,47 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
                 horario_restaurante.setText(VariablesGlobales.getInstance().getHorario().toString());
             }
         }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                imagenRestauranteButton.setImageURI(resultUri);
+                try {
+                    final InputStream imageStream = getContentResolver().openInputStream(resultUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    imagenRestaurante=selectedImage;
+                }
+                catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Mensaje("ALGO PASO PERRITO");
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
     }
 
 
 
+
+
     private void AgregarRestaurante(){
+        progressDialog.setMessage("Agregando restaurante...");
+        progressDialog.show();
+
         FirebaseAuth firebaseAuth;
         firebaseAuth= FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         Horario horario;
         final String nombre=nombre_restaurante.getText().toString();
         String descripcion= descripcion_restaurante.getText().toString();
+        String telef=telefono_restaurante.getText().toString();
+        String ubicacion = ubicacion_restaurante.getText().toString();
 
-        double latitud= VariablesGlobales.getInstance().posicionAgregarRestaurante.latitude;
-        double longitud= VariablesGlobales.getInstance().posicionAgregarRestaurante.longitude;
+        double latitud= VariablesGlobales.getInstance().getPosicionAgregarRestaurante().latitude;
+        double longitud= VariablesGlobales.getInstance().getPosicionAgregarRestaurante().longitude;
+
+
         if(VariablesGlobales.getInstance().getHorario()!=null){
             horario = VariablesGlobales.getInstance().getHorario();
         }
@@ -158,8 +221,10 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
         restaurante.setNombre(nombre);
         restaurante.setDescripcion(descripcion);
         restaurante.setHorario(horario);
-        restaurante.setLatitudesH(latitud);
-        restaurante.setLatitudesV(longitud);
+        restaurante.setLatitudesH(latitud);//latitud
+        restaurante.setLatitudesV(longitud);//longitud
+        restaurante.setTelefono(telef);
+        restaurante.setUbicacion(ubicacion);
 
         final DataBase db= DataBase.getInstance();
         Query query= db.getmDatabaseReference().child("Usuario").orderByChild("correo").equalTo(user.getEmail());
@@ -170,7 +235,13 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
                     for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
                         Usuario user = postSnapshot.getValue(Usuario.class);
                         Mensaje("Restaurante agregado exitosamente");
-                        db.agregarRestaurante(restaurante,user.getIdFirebase());
+                        if(imagenRestaurante !=null){
+                            db.agregarRestaurante(restaurante,user.getCorreo(),imagenRestaurante,progressDialog);
+                        }
+                        else{
+                            Bitmap noImageIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_no_image_available);
+                            db.agregarRestaurante(restaurante,user.getCorreo(),noImageIcon,progressDialog);
+                        }
                         db.actualizarRestaurantesUsuario(restaurante,user);
                         limpiaForm();
                         Intent intento = new Intent(getApplicationContext(), MainActivity.class);
@@ -191,7 +262,31 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
     public void limpiaForm(){
         nombre_restaurante.setText("");
         descripcion_restaurante.setText("");
+        ubicacion_restaurante.setText("");
+        telefono_restaurante.setText("");
+        horario_restaurante.setText("");
         VariablesGlobales.getInstance().posicionAgregarRestaurante=null;
+    }
+
+
+
+/*
+    public void getImageFromGallery(){
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+
+
+    }
+*/
+
+    public void getImageFromGallery(){
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMinCropWindowSize(0,0)
+                .setMinCropResultSize(260,260)
+                .setMaxCropResultSize(600,410)
+                .start(this);
     }
 
 

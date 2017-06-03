@@ -29,6 +29,14 @@
         android:background="@android:color/background_light"
         android:weightSum="1">
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seleccionar Horario"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -174,10 +182,10 @@
             android:layout_weight="0.54" />
 
         <Button
-            android:text="Finalizar"
+            android:id="@+id/btnFinalizar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnFinalizar" />
+            android:text="Siguiente" />
 
     </LinearLayout>
 
