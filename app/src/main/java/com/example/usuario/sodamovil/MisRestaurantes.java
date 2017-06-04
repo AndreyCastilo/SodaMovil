@@ -69,8 +69,8 @@ public class MisRestaurantes extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Restaurante restaurante = (Restaurante) mAdapter.getItem(position);
-                Toast toast = Toast.makeText(getApplicationContext().getApplicationContext(), restaurante.getCodigo(), Toast.LENGTH_SHORT);
-                toast.show();
+                //Toast toast = Toast.makeText(getApplicationContext().getApplicationContext(), restaurante.getCodigo(), Toast.LENGTH_SHORT);
+                //toast.show();
                 if(restaurante != null){
                     VariablesGlobales.getInstance().setRestauranteActual(restaurante);
                     Intent intento = new Intent(getApplicationContext(), RestauranteActivity.class);

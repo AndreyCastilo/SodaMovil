@@ -43,6 +43,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.http.HEAD;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
@@ -120,7 +121,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
             }
 
         });
-
+/*
         imagenRestauranteButton.setOnClickListener(new View.OnClickListener(){
 
 
@@ -132,7 +133,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
 
 
         });
-
+*/
         LlenarCamposRestaurante();
 
 
@@ -193,7 +194,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
                 }
                 catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    Mensaje("ALGO PASO PERRITO");
+                    //Mensaje("ALGO PASO PERRITO");
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -257,7 +258,8 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
                             db.actualizarRestaurante(restaurante,user.getCorreo(),noImageIcon,progressDialog);
                         }
                         //db.actualizarRestaurantesUsuario(restaurante,user);
-                        Mensaje("Restaurante editado exitosamente");
+                        MensajeSuccess("Restaurante editado exitosamente");
+                        progressDialog.dismiss();
                         //limpiaForm();
                         Intent intento = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intento);
@@ -266,7 +268,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Mensaje("No habia nada!");
+                //Mensaje("No habia nada!");
             }
         });
     }
@@ -352,6 +354,10 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
         super.onResume();
         LlenarCamposRestaurante();
 
+    }
+
+    public void MensajeSuccess(String mensaje){
+        Toasty.success(this, mensaje, Toast.LENGTH_SHORT, true).show();
     }
 
 }

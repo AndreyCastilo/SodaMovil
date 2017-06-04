@@ -93,13 +93,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         quitar
          */
 
-        mEmailView.setText("jose123@hotmail.com");
+        //mEmailView.setText("jose123@hotmail.com");
 
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        mPasswordView.setText("1234567");
+        //mPasswordView.setText("1234567");
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 // signInButton.setVisibility(View.GONE);
                 // signOutButton.setVisibility(View.VISIBLE);
-                Mensaje("jaja!");
+                //Mensaje("jaja!");
                 if (user != null) {
                     // User is signed in
 

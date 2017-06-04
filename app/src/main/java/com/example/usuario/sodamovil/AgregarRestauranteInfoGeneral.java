@@ -21,7 +21,7 @@ public class AgregarRestauranteInfoGeneral extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_restaurante_info_general);
         vg= VariablesGlobales.getInstance();
-        Mensaje(vg.restauranteAgregar.getNombre());
+        //Mensaje(vg.restauranteAgregar.getNombre());
         // alambramos el boton
 
         btnIrAHorario = (Button) findViewById(R.id.btnIrAgregarRestauranteHorario);

@@ -136,17 +136,7 @@ public class DataBase {
         childUpdates.put("/Restaurante/" + emailSinpunto +"/" +restaurante.getCodigo(), restaurante.toMap());
         childUpdatesTodosRestaurantes.put("/Restaurantes_Todos/" +restaurante.getCodigo(), restaurante.toMap());
         mDatabaseReference.updateChildren(childUpdates);
-        mDatabaseReference.updateChildren(childUpdatesTodosRestaurantes).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    StorageDB storageDB= StorageDB.getInstance();
-                    storageDB.updateImagenRestauranteBitMap(imagenRestaurante,restaurante.getCodigo());
-                    progressDialog.dismiss();
-                }
-
-            }
-        });
+        mDatabaseReference.updateChildren(childUpdatesTodosRestaurantes);
     }
 
 }
