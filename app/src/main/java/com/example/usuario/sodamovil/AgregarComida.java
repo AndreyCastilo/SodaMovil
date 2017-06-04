@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URI;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.internal.Platform;
 
 import retrofit2.http.HEAD;
@@ -171,7 +172,7 @@ public class AgregarComida extends AppCompatActivity {
                         imagenComidaFirebase = selectedImage;
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                        Mensaje("ALGO PASO PERRITO");
+                        //Mensaje("ALGO PASO PERRITO");
                     }
                 }
             }
@@ -236,6 +237,7 @@ public class AgregarComida extends AppCompatActivity {
         Restaurante restauranteActual= VariablesGlobales.getInstance().getRestauranteActual();
         DataBase.getInstance().agregarComida(restauranteActual,comida,imagenComidaFirebase,progressDialog);
         limpiaForm();
+        MensajeSuccess("Comida agregada exitosamente.");
         super.onBackPressed();
     }
 
@@ -271,7 +273,9 @@ public class AgregarComida extends AppCompatActivity {
         // .setMinCropWindowSize(0,0)
     }
 
-
+    public void MensajeSuccess(String mensaje){
+        Toasty.success(this, mensaje, Toast.LENGTH_SHORT, true).show();
+    }
 
 
 }

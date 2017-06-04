@@ -102,7 +102,7 @@ public class AgregarRestauranteImagen extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            Mensaje("Entre");
+            //Mensaje("Entre");
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
@@ -114,7 +114,7 @@ public class AgregarRestauranteImagen extends AppCompatActivity {
                 }
                 catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    Mensaje("ALGO PASO PERRITO");
+                    //Mensaje("ALGO PASO PERRITO");
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -182,7 +182,7 @@ public class AgregarRestauranteImagen extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Mensaje("No habia nada!");
+                //Mensaje("No habia nada!");
             }
         });
     }

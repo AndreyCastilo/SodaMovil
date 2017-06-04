@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Mensaje("HALLO");
+            //Mensaje("HALLO");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -157,10 +157,10 @@ public class MainActivity extends AppCompatActivity
             startActivity(intento);
         } else if (id == R.id.menuItemCerrarSesion) {
             DialogoSiNoLogOut(findViewById(R.id.nav_view));
-            Mensaje("Cerrar Sesión");
+            //Mensaje("Cerrar Sesión");
 
         } else if (id == R.id.menuItemMisRestaurantes) {
-            Mensaje("Mis Restaurantes");
+            //Mensaje("Mis Restaurantes");
             Intent intento = new Intent(getApplicationContext(), MisRestaurantes.class);
             startActivity(intento);
 
