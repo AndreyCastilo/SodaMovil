@@ -86,7 +86,7 @@ public class AgregarRestauranteImagen extends AppCompatActivity {
 
             public void onClick(View arg0) {
                 scrollView.scrollTo(0,0);
-                Mensaje("X: "+scrollView.getScrollX()+"  Y: "+scrollView.getScrollY());
+                //Mensaje("X: "+scrollView.getScrollX()+"  Y: "+scrollView.getScrollY());
             }
 
         });

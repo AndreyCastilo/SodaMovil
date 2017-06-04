@@ -54,8 +54,8 @@ public class AgregarHorarioRestauranteActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAgregarHorarioRestaurante);
         toolbar.setTitle("Horario");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      //  setSupportActionBar(toolbar);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tvLun = (TextView) findViewById(R.id.tvLun);
         tvMar = (TextView) findViewById(R.id.tvMar);
         tvMier = (TextView) findViewById(R.id.tvMier);

@@ -134,7 +134,7 @@ public class AgregarResturanteUbicacion extends AppCompatActivity {
         if(requestCode==PLACE_PICKER_REQUEST){
             ubicacion.setEnabled(true);
             if(resultCode==RESULT_OK){
-                Mensaje(data.getExtras().toString());
+               // Mensaje(data.getExtras().toString());
                 Place place = PlacePicker.getPlace(this,data);
                 String address = ""+place.getAddress();
                 latlng = place.getLatLng();
