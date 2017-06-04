@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_restaurant_menu_white_24dp"
+        app:srcCompat="@drawable/ic_add_24dp"
         app:backgroundTint="@android:color/holo_red_light" />
 
 </android.support.design.widget.CoordinatorLayout>

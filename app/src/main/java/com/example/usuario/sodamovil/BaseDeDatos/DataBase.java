@@ -110,4 +110,43 @@ public class DataBase {
         childUpdates.put("/Usuario/" + usuario.getIdFirebase(), usuario.toMap());
         mDatabaseReference.updateChildren(childUpdates);
     }
+
+    /*public void actualizarRestaurante(Restaurante restaurante,String email) {
+        String emailSinpunto;
+        if(email.contains("."))
+            emailSinpunto = email.replace(".","");
+        else emailSinpunto=email;
+        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> childUpdatesTodosRestaurantes = new HashMap<>();
+        Map<String, Object> Valores = new HashMap<>();
+        childUpdates.put("/Restaurante/" + emailSinpunto +"/" +restaurante.getCodigo(), restaurante.toMap());
+        childUpdatesTodosRestaurantes.put("/Restaurantes_Todos/" +restaurante.getCodigo(), restaurante.toMap());
+        mDatabaseReference.updateChildren(childUpdates);
+        mDatabaseReference.updateChildren(childUpdatesTodosRestaurantes);
+    }*/
+
+    public void actualizarRestaurante(final Restaurante restaurante, String email, final Bitmap imagenRestaurante, final ProgressDialog progressDialog) {
+        String emailSinpunto;
+        if(email.contains("."))
+            emailSinpunto = email.replace(".","");
+        else emailSinpunto=email;
+        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> childUpdatesTodosRestaurantes = new HashMap<>();
+        Map<String, Object> Valores = new HashMap<>();
+        childUpdates.put("/Restaurante/" + emailSinpunto +"/" +restaurante.getCodigo(), restaurante.toMap());
+        childUpdatesTodosRestaurantes.put("/Restaurantes_Todos/" +restaurante.getCodigo(), restaurante.toMap());
+        mDatabaseReference.updateChildren(childUpdates);
+        mDatabaseReference.updateChildren(childUpdatesTodosRestaurantes).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    StorageDB storageDB= StorageDB.getInstance();
+                    storageDB.updateImagenRestauranteBitMap(imagenRestaurante,restaurante.getCodigo());
+                    progressDialog.dismiss();
+                }
+
+            }
+        });
+    }
+
 }

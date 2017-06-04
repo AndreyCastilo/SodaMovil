@@ -16,6 +16,8 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +47,7 @@ import static com.example.usuario.sodamovil.AgregarRestauranteActivity.RESULT_LO
 public class AgregarComida extends AppCompatActivity {
     EditText nombreComida;
     EditText precioComida;
+    EditText descripcionComida;
     ImageView imagenComida;
     Bitmap imagenComidaFirebase;
     ProgressDialog progressDialog;
@@ -59,6 +62,7 @@ public class AgregarComida extends AppCompatActivity {
         setContentView(R.layout.activity_agregar_comida);
         nombreComida= (EditText) findViewById(R.id.nombreComidaId);
         precioComida = (EditText) findViewById(R.id.precioComidaId);
+        descripcionComida = (EditText) findViewById(R.id.descripcionComida);
         imagenComida= (ImageView) findViewById(R.id.imageViewComida);
         BitmapDrawable drawable = (BitmapDrawable) imagenComida.getDrawable();
         imagenComidaFirebase =  drawable.getBitmap();
@@ -79,6 +83,67 @@ public class AgregarComida extends AppCompatActivity {
                 getImageFromGallery();
             }
         });
+
+        btnAgregarComida.setEnabled(false);
+        btnAgregarComida.setAlpha(.5f);
+
+        nombreComida.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() > 0 && precioComida.getText().toString().length()>0  && descripcionComida.getText().toString().length()>0 ){
+                    btnAgregarComida.setEnabled(true);
+                    btnAgregarComida.setAlpha(1);
+                }
+                else{
+                    btnAgregarComida.setEnabled(false);
+                    btnAgregarComida.setAlpha(.5f);
+                }}
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        precioComida.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() > 0 && nombreComida.getText().toString().length()>0  && descripcionComida.getText().toString().length()>0 ){
+                    btnAgregarComida.setEnabled(true);
+                    btnAgregarComida.setAlpha(1);
+                }
+                else{
+                    btnAgregarComida.setEnabled(false);
+                    btnAgregarComida.setAlpha(.5f);
+                }}
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        descripcionComida.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() > 0 && nombreComida.getText().toString().length()>0  && precioComida.getText().toString().length()>0 ){
+                    btnAgregarComida.setEnabled(true);
+                    btnAgregarComida.setAlpha(1);
+                }
+                else{
+                    btnAgregarComida.setEnabled(false);
+                    btnAgregarComida.setAlpha(.5f);
+                }}
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
 
     }
 
@@ -163,9 +228,11 @@ public class AgregarComida extends AppCompatActivity {
         progressDialog.show();
         String nombre= nombreComida.getText().toString();
         String precio= precioComida.getText().toString();
+        String descripcion= descripcionComida.getText().toString();
         Comida comida= new Comida();
         comida.setNombre(nombre);
         comida.setPrecio(Float.parseFloat(precio));
+        comida.setDescripcion(descripcion);
         Restaurante restauranteActual= VariablesGlobales.getInstance().getRestauranteActual();
         DataBase.getInstance().agregarComida(restauranteActual,comida,imagenComidaFirebase,progressDialog);
         limpiaForm();
@@ -177,6 +244,7 @@ public class AgregarComida extends AppCompatActivity {
     public void limpiaForm(){
         nombreComida.setText("");
         precioComida.setText("");
+        descripcionComida.setText("");
         imagenComida.setImageResource(R.drawable.ic_no_image_available);
         BitmapDrawable drawable = (BitmapDrawable) imagenComida.getDrawable();
         imagenComidaFirebase =  drawable.getBitmap();

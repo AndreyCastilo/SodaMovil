@@ -14,17 +14,19 @@ public class Comida {
     private String idFirebase;
     private String idRestaurante;
     private String nombre;
+    private String descripcion;
     private float precio;
     public Comida(){
 
     }
 
-    public Comida(String idDrawable, String idFirebase, String idRestaurante, String nombre, float precio) {
+    public Comida(String idDrawable, String idFirebase, String idRestaurante, String nombre,String descripcion,float precio) {
         this.idDrawable = idDrawable;
         this.idFirebase = idFirebase;
         this.idRestaurante = idRestaurante;
         this.nombre = nombre;
         this.precio = precio;
+        this.descripcion=descripcion;
     }
 
 
@@ -70,4 +72,11 @@ public class Comida {
         return idDrawable;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }

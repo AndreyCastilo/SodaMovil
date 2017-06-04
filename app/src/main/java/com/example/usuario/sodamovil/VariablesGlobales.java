@@ -1,7 +1,7 @@
 package com.example.usuario.sodamovil;
 
+import com.example.usuario.sodamovil.Entidades.Comida;
 import android.view.View;
-
 import com.example.usuario.sodamovil.Entidades.Horario;
 import com.example.usuario.sodamovil.Entidades.Restaurante;
 import com.google.android.gms.maps.model.LatLng;
@@ -20,6 +20,7 @@ public class VariablesGlobales {
     public LatLng posicionAgregarRestaurante;
     private Horario horario;
     private Restaurante restauranteActual;
+    private Comida comidaActual;
     public Restaurante restauranteAgregar;
     private String ubicacion;
     private List<Restaurante> restaurantesResultadoBuscar= new ArrayList<>();
@@ -66,6 +67,12 @@ public class VariablesGlobales {
         this.restaurantesResultadoBuscar = restaurantesResultadoBuscar;
     }
 
+    public Comida getComidaActual() {
+        return comidaActual;
+    }
+
+    public void setComidaActual(Comida comidaActual) {
+        this.comidaActual = comidaActual;}
 
     public String getUbicacion() {
         return ubicacion;

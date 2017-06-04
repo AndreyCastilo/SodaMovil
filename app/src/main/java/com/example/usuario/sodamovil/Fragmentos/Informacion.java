@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -24,16 +25,28 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.usuario.sodamovil.AgregarComida;
+import com.example.usuario.sodamovil.AgregarRestauranteActivity;
+import com.example.usuario.sodamovil.BaseDeDatos.DataBase;
 import com.example.usuario.sodamovil.BaseDeDatos.StorageDB;
 import com.example.usuario.sodamovil.Entidades.Restaurante;
 import com.example.usuario.sodamovil.R;
 import com.example.usuario.sodamovil.VariablesGlobales;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.usuario.sodamovil.R.id.container;
 import static com.example.usuario.sodamovil.R.id.textView;
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.google.android.gms.maps.CameraUpdateFactory.scrollBy;
 
 
@@ -49,6 +62,7 @@ public class Informacion extends Fragment {
         View inf = inflater.inflate(R.layout.fragmento_informacion, container, false);
         setRestaurante(inf);
         setHasOptionsMenu(true);
+        esDuennoRestaurante(inf);
         return inf;
     }
 
@@ -77,12 +91,7 @@ public class Informacion extends Fragment {
         return false;
     }
 
-        ScrollView scroll = (ScrollView) inf.findViewById(R.id.scrollViewInfo);
-        VariablesGlobales vg = VariablesGlobales.getInstance();
-        vg.vista = inf;
-        scroll.scrollTo(0,vg.getRestauranteActual().getScrollY());
-        return inf;
-    }
+
 
 
     public void setRestaurante(View view){
@@ -114,6 +123,7 @@ public class Informacion extends Fragment {
                     .load(imaginesRestaurante)
                     .into(imagen);
             imagen.scrollTo(0,restaurante.getScrollY());
+
             NombreTW.setText(restaurante.getNombre());
             DescripcionTW.setText(restaurante.getDescripcion());
             HorarioTW.setText(restaurante.getHorario().toString());
@@ -133,5 +143,54 @@ public class Informacion extends Fragment {
     }
     ;
 
+    public void esDuennoRestaurante(final View view){
+
+        FirebaseAuth firebaseAuth;
+        firebaseAuth= FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        final DataBase db= DataBase.getInstance();
+        String  emailSinPunto= user.getEmail().replace(".","");
+        db.getmDatabaseReference().child("Restaurante").child(emailSinPunto).addValueEventListener(new ValueEventListener() {
+            boolean esDuenno;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Restaurante> restaurantes = new ArrayList<Restaurante>();
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    Restaurante rest = postSnapshot.getValue(Restaurante.class);
+                    restaurantes.add(rest);
+                }
+
+                for(Restaurante rest: restaurantes){
+                    if( rest.getCodigo().equals(VariablesGlobales.getInstance().getRestauranteActual().getCodigo()) ){
+                        esDuenno = true;
+                    }
+                }
+                FloatingActionButton btnAgregarComida= (FloatingActionButton) view.findViewById(R.id.btnFloatEditarRestaurante);
+                if(esDuenno){
+                    //btnAgregarComida.setVisibility(View.VISIBLE);
+                    btnAgregarComida.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intento = new Intent(getApplicationContext(), AgregarRestauranteActivity.class);
+                            startActivity(intento);
+
+                        }
+                    });
+                }
+                else{
+                    btnAgregarComida.setVisibility(View.INVISIBLE);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
 }

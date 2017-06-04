@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.usuario.sodamovil.AgregarComida;
 import com.example.usuario.sodamovil.BaseDeDatos.DataBase;
 import com.example.usuario.sodamovil.BaseDeDatos.StorageDB;
+import com.example.usuario.sodamovil.ComidaActivity;
 import com.example.usuario.sodamovil.Entidades.Comida;
 import com.example.usuario.sodamovil.Entidades.Restaurante;
 import com.example.usuario.sodamovil.MainActivity;
@@ -79,7 +81,7 @@ public class MenuFragmento extends Fragment {
 
 
             @Override
-            protected void populateViewHolder(ComidaHolder viewHolder, Comida model, int position) {
+            protected void populateViewHolder(ComidaHolder viewHolder, Comida model, final int position) {
 
                 viewHolder.setNombre(model.getNombre());
                 viewHolder.setPrecio(Double.toString(model.getPrecio()));
@@ -88,11 +90,27 @@ public class MenuFragmento extends Fragment {
                         .using(new FirebaseImageLoader())
                         .load(imaginesRestaurante)
                         .into(viewHolder.imagen);
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       // Log.w(TAG, "You clicked on "+position);
+                        Comida  comidaActual = mAdapter.getItem(position);
+                        VariablesGlobales.getInstance().setComidaActual(comidaActual);
+                        Intent intento = new Intent(getApplicationContext(), ComidaActivity.class);
+                        startActivity(intento);
+                    }
+                });
+
+
+
+
             }
 
             ;
 
         };
+
 
         esDuennoRestaurante(view);
 
@@ -136,6 +154,7 @@ public class MenuFragmento extends Fragment {
                         public void onClick(View v) {
                             Intent intento = new Intent(getApplicationContext(), AgregarComida.class);
                             startActivity(intento);
+
                         }
                     });
                 }

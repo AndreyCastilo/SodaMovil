@@ -174,6 +174,7 @@ public class AgregarRestauranteImagen extends AppCompatActivity {
                             db.agregarRestaurante(restaurante,user.getCorreo(),noImageIcon,progressDialog);
                         }
                         db.actualizarRestaurantesUsuario(restaurante,user);
+                        vg.restauranteAgregar = null;
                         Intent intento = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intento);
                     }

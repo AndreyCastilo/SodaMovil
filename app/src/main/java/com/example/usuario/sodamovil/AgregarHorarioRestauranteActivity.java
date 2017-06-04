@@ -69,8 +69,15 @@ public class AgregarHorarioRestauranteActivity extends AppCompatActivity {
         horario= new Horario();
         btnSiguiente.setEnabled(false);
         btnSiguiente.setAlpha(.5f);
-        if(vg.restauranteAgregar.getHorario()!=null){
-            horario = vg.restauranteAgregar.getHorario();
+        if( vg.restauranteAgregar != null ){
+            if(vg.restauranteAgregar.getHorario()!=null){
+                horario = vg.restauranteAgregar.getHorario();
+                btnSiguiente.setEnabled(true);
+                btnSiguiente.setAlpha(1);
+            }
+        }
+        else if( vg.getHorario() != null){
+            horario = vg.getHorario();
             btnSiguiente.setEnabled(true);
             btnSiguiente.setAlpha(1);
         }
@@ -151,13 +158,21 @@ public class AgregarHorarioRestauranteActivity extends AppCompatActivity {
     }
 
     public void pasarAUbicacion(){
-        if(horario.getDias().size()>0){
-            vg.restauranteAgregar.setHorario(horario);
-        Intent intento = new Intent(this, AgregarResturanteUbicacion.class);
-        startActivity(intento);
-        }else{
-            actualizaEstadoBoton();
+        if( vg.restauranteAgregar != null ){
+            if(horario.getDias().size()>0){
+                vg.restauranteAgregar.setHorario(horario);
+                Intent intento = new Intent(this, AgregarResturanteUbicacion.class);
+                startActivity(intento);
+            }else{
+                actualizaEstadoBoton();
+            }
         }
+        else{
+            Intent output = new Intent();
+            setResult(RESULT_OK, output);
+            finish();
+        }
+
     }
 
     @Override

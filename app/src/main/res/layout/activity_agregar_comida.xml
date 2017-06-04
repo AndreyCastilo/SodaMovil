@@ -41,7 +41,16 @@
                 android:id="@+id/precioComidaId"
                 android:inputType="numberDecimal"
                 />
+
         </android.support.design.widget.TextInputLayout>
+
+        <EditText
+            android:id="@+id/descripcionComida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Descripción"
+            android:inputType="textMultiLine" />
 
 
         <ImageView
@@ -52,14 +61,14 @@
 
 
         <Button
-            android:text="Agregar Comida"
+            android:id="@+id/btnAgregarComida"
             style="@android:style/TextAppearance.Material.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnAgregarComida"
+            android:layout_marginTop="15dp"
             android:background="@color/colorPrimary"
-            android:textColor="@android:color/background_light"
-            android:layout_marginTop="15dp"/>
+            android:text="Agregar Comida"
+            android:textColor="@android:color/background_light" />
 
         <ProgressBar
             android:id="@+id/agregarComida_progress"

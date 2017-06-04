@@ -8,28 +8,35 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.usuario.sodamovil.BaseDeDatos.DataBase;
+import com.example.usuario.sodamovil.BaseDeDatos.StorageDB;
 import com.example.usuario.sodamovil.Entidades.Horario;
 import com.example.usuario.sodamovil.Entidades.Restaurante;
 import com.example.usuario.sodamovil.Entidades.Usuario;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -37,6 +44,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import retrofit2.http.HEAD;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 public class AgregarRestauranteActivity extends AppCompatActivity {
 
@@ -78,6 +87,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
         horario_restaurante.setEnabled(false);
         ubicacion_restaurante.setFocusable(false);
         telefono_restaurante=(EditText) findViewById(R.id.etTelf);
+
         //Programamos el evento onclick
         MiBoton.setOnClickListener(new View.OnClickListener(){
 
@@ -123,6 +133,8 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
 
         });
 
+        LlenarCamposRestaurante();
+
 
         AgregarRestaurante.setOnClickListener(new View.OnClickListener(){
 
@@ -133,7 +145,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
             }
 
         });
-        getSupportActionBar().setTitle("Agregar Restaurante");
+        getSupportActionBar().setTitle("Editar Restaurante");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
@@ -147,7 +159,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                limpiaForm();
+                //limpiaForm();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -194,7 +206,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
 
 
     private void AgregarRestaurante(){
-        progressDialog.setMessage("Agregando restaurante...");
+        progressDialog.setMessage("Editando restaurante...");
         progressDialog.show();
 
         FirebaseAuth firebaseAuth;
@@ -217,7 +229,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
             horario= new Horario();
         }
 
-        final Restaurante restaurante = new Restaurante();
+        final Restaurante restaurante = VariablesGlobales.getInstance().getRestauranteActual();
         restaurante.setNombre(nombre);
         restaurante.setDescripcion(descripcion);
         restaurante.setHorario(horario);
@@ -225,6 +237,7 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
         restaurante.setLatitudesV(longitud);//longitud
         restaurante.setTelefono(telef);
         restaurante.setUbicacion(ubicacion);
+        restaurante.setImagen(imagenRestaurante);
 
         final DataBase db= DataBase.getInstance();
         Query query= db.getmDatabaseReference().child("Usuario").orderByChild("correo").equalTo(user.getEmail());
@@ -234,16 +247,18 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
                 if(dataSnapshot.hasChildren()) {
                     for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
                         Usuario user = postSnapshot.getValue(Usuario.class);
-                        Mensaje("Restaurante agregado exitosamente");
+                        //Mensaje("Restaurante editado exitosamente");
                         if(imagenRestaurante !=null){
-                            db.agregarRestaurante(restaurante,user.getCorreo(),imagenRestaurante,progressDialog);
+                            //Mensaje("Entré a este...");
+                            db.actualizarRestaurante(restaurante,user.getCorreo(),imagenRestaurante,progressDialog);
                         }
                         else{
                             Bitmap noImageIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_no_image_available);
-                            db.agregarRestaurante(restaurante,user.getCorreo(),noImageIcon,progressDialog);
+                            db.actualizarRestaurante(restaurante,user.getCorreo(),noImageIcon,progressDialog);
                         }
-                        db.actualizarRestaurantesUsuario(restaurante,user);
-                        limpiaForm();
+                        //db.actualizarRestaurantesUsuario(restaurante,user);
+                        Mensaje("Restaurante editado exitosamente");
+                        //limpiaForm();
                         Intent intento = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intento);
                     }
@@ -289,6 +304,54 @@ public class AgregarRestauranteActivity extends AppCompatActivity {
                 .start(this);
     }
 
+    /////////////////////
+    public void LlenarCamposRestaurante(){
+        Restaurante rest = VariablesGlobales.getInstance().getRestauranteActual();
+        nombre_restaurante.setText(rest.getNombre());
+        descripcion_restaurante.setText(rest.getDescripcion());
+        ubicacion_restaurante.setText(rest.getUbicacion());
+        horario_restaurante.setText(rest.getHorario().toString());
+        horario_restaurante.setEnabled(false);
+        ubicacion_restaurante.setFocusable(false);
+        telefono_restaurante.setText(rest.getTelefono());
+        imagenRestaurante = rest.getImagen();
+        imagenRestauranteButton.setImageBitmap(rest.getImagen());
+        VariablesGlobales.getInstance().setPosicionAgregarRestaurante(new LatLng(rest.getLatitudesH(),rest.getLatitudesV()));
+        VariablesGlobales.getInstance().setHorario(rest.getHorario());
+        //VariablesGlobales.getInstance().restauranteAgregar.setHorario(rest.getHorario());
+        StorageReference imaginesRestaurante = StorageDB.getInstance().imaginesRestaurante.child(rest.getCodigo());
 
+        Glide.with(imagenRestauranteButton.getContext())
+                .using(new FirebaseImageLoader())
+                .load(imaginesRestaurante)
+                .centerCrop()
+                .into(imagenRestauranteButton);
+
+        final ScrollView scroll = (ScrollView) findViewById(R.id.scrollViewEditar);
+
+        scroll.setOnTouchListener(new View.OnTouchListener() {
+
+
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+        Glide.with(imagenRestauranteButton.getContext())
+                .using(new FirebaseImageLoader())
+                .load(imaginesRestaurante)
+                .into(imagenRestauranteButton);
+        imagenRestauranteButton.scrollTo(0,rest.getScrollY());
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        LlenarCamposRestaurante();
+
+    }
 
 }

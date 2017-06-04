@@ -22,11 +22,9 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -77,13 +75,14 @@
         <activity android:name=".AgregarPlatosRestauranteActivity" />
         <activity android:name=".MisRestaurantes" />
         <activity android:name=".AgregarComida" />
-        <activity android:name=".RestaurantesBusqueda"></activity>
+        <activity android:name=".RestaurantesBusqueda" />
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" /> <!-- para el cropp de las imagines -->
 
         <activity android:name=".AgregarRestauranteInfoGeneral" />
         <activity android:name=".AgregarResturanteUbicacion" />
         <activity android:name=".AgregarRestauranteImagen" />
-        <activity android:name=".AgregarRestauranteNombre"></activity>
+        <activity android:name=".AgregarRestauranteNombre" />
+        <activity android:name=".ComidaActivity"></activity>
     </application>
 
 </manifest>

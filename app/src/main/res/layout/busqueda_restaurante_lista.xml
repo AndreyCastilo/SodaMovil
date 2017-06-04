@@ -17,7 +17,7 @@
             android:id="@+id/imgMiRestaurante"
             android:layout_width="65dp"
             android:layout_height="65dp"
-            android:src="@drawable/camaron"
+            android:src="@drawable/ic_no_image_available"
             app:civ_border_width="2dp"
             app:civ_border_color="#FFeeeeee"/>
 
